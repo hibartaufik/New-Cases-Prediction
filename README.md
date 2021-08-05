@@ -140,14 +140,25 @@ Kolom yang akan diimputasi:
 #### 2.1.1 Melihat Distribusi Data Untuk Menetukan Nilai Imputasi Tiap Kolom
 - Kolom Numerik
 ```
-for col in cols_null_num:
-  sns.displot(df[col].value_counts(), kde=True)
+num_colors = ['#C400FF', '#53B8BB', '#FFF338', '#9DDAC6', '#FA8072']
 ```
-![image](https://user-images.githubusercontent.com/74480780/126043744-768d7eca-f1e5-4740-bbb8-71b12772c6fb.png)
-![image](https://user-images.githubusercontent.com/74480780/126043773-75b9ca42-6323-42e3-9b24-51fae1176e2b.png)
-![image](https://user-images.githubusercontent.com/74480780/126043803-59567879-b64b-45ba-b767-36c5fad6071b.png)
-![image](https://user-images.githubusercontent.com/74480780/126043826-292d94c3-e2cb-4eb0-87f1-2baf97acedbf.png)
-![image](https://user-images.githubusercontent.com/74480780/126043839-477ab33d-3093-4ea8-b599-b80cd0bf2090.png)
+```
+fig, ax = plt.subplots(3, 2, figsize=(12, 6), dpi=800)
+ax = ax.flatten()
+plt.suptitle("Distribusi Feature Numerik dengan Hisplot", fontweight='bold')
+
+for col, index in zip(cols_null_num, range(len(cols_null_num))):
+    sns.histplot(ax=ax[cols_null_num.index(col)], data=df[col].value_counts(), color=num_colors[index])
+    ax[cols_null_num.index(col)].grid(linewidth=0.5)
+    ax[cols_null_num.index(col)].set_xlabel(f"'{col}'", fontsize=10, fontweight='bold')
+    ax[cols_null_num.index(col)].set_ylabel("count", fontsize=10, fontweight='bold')
+
+ax[len(cols_null_num)].set_axis_off()
+plt.tight_layout()
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/74480780/128278525-afebc8ad-1157-4337-8ce0-ea750ac5ce17.png)
+
 Kita dapat menetukan nilai yang akan mengganti nilai kosong berdasarkan distribusi data tiap kolom. Untuk 'Total Rural Villages' memiliiki data berdistrbusi 'nyaris' normal, nilai modus merupakan pilihan tepat karena data yang bernilai bulat, mengapa tidak mean? karena nilai mean tidak terlalu bisa mewakili distribusi data yang tidak benar-benar normal/merata.
 
 Untuk kolom numerik lain seperti 'Total Cities', 'Total Urban Villages', 'Growth Factor of New Cases', dan 'Growth Factor of New Deaths' memiliki data yang sama sekali tidak merata, sehingga nilai median merupakan nilai yang cocok untuk dapat mengisi data null si setiap kolom-nya.
